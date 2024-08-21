@@ -1,0 +1,1 @@
+displayElement = document.querySelector("#display");
