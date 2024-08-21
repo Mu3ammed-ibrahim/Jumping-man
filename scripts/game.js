@@ -3,7 +3,7 @@ displayElement = document.querySelector("#game-container");
 let characterElement = document.createElement("div");
 // let obstecleElement = document.createElement("div");
 
-characterElement.setAttribute("style", "position: absolute; bottom: 0px; left: 10px; height: 50px; width: 50px; background-color: blue");
+characterElement.setAttribute("id", "character");
 
 displayElement.appendChild(characterElement);
 
