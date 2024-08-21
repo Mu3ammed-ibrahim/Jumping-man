@@ -1,6 +1,7 @@
 displayElement = document.querySelector("#game-container");
 
 let characterElement = document.createElement("div");
+// let obstecleElement = document.createElement("div");
 
 characterElement.setAttribute("id", "character");
 
@@ -52,6 +53,18 @@ const handleKeyup = (e) => {
 }
 
 document.addEventListener("keyup", handleKeyup);
+
+function generateObstecle (){
+    setInterval(
+        function(){
+            let obstecleElement = document.createElement("div");
+            obstecleElement.classList.add('obstecale')
+            displayElement.appendChild(obstecleElement)
+        }
+    ,5000)
+}
+
+generateObstecle()
 
 // equation of motion ----
 // height = v*t - g*t*t/2  g=9.8 v=10 t=(20*timing_counter)/1000
