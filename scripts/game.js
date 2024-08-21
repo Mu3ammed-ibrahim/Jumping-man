@@ -63,7 +63,7 @@ function generateObstecle() {
     let obstecleElement = document.createElement("div");
     obstecleElement.classList.add("obstacle");
     displayElement.appendChild(obstecleElement);
-  }, 1000);
+  }, 3000);
 }
 
 generateObstecle();
