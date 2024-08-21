@@ -24,14 +24,23 @@ body {
   border-radius: 5px;
 }
 
-.obstacle {
+.obstecale {
   width: 30px;
   height: 50px;
-  background-color: #555;
+  background-color: hsl(60, 96%, 44%);
   position: absolute;
   bottom: 0;
   right: 0;
+  animation: moveObstacle 2s infinite linear;
 }
+@keyframes moveObstacle {
+    from {
+      right: -50px;
+    }
+    to {
+      right: 100vw;
+    }
+  }
 
 #score {
   position: absolute;
