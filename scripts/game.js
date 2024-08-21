@@ -1,4 +1,4 @@
-displayElement = document.querySelector("#game-container");
+const displayElement = document.querySelector("#game-container");
 
 let characterElement = document.createElement("div");
 // let obstecleElement = document.createElement("div");
@@ -23,7 +23,6 @@ const calculateJump = () => {
         INITIAL_VELOCITY * index - (LITTLE_G * index * index) / 2
       }px`)
   );
-
   return heights_array;
 };
 
@@ -64,9 +63,39 @@ function generateObstecle() {
     obstecleElement.classList.add("obstacle");
     displayElement.appendChild(obstecleElement);
   }, 3000);
+  setInterval(checkCollision, 100);
 }
 
 generateObstecle();
 
 // equation of motion ----
 // height = v*t - g*t*t/2  g=9.8 v=10 t=(20*timing_counter)/1000
+
+function checkCollision() {
+  const characterRect = characterElement.getBoundingClientRect();
+  const obstacles = document.querySelectorAll(".obstacle");
+  obstacles.forEach((obstacle) => {
+    const obstacleRect = obstacle.getBoundingClientRect();
+    if (
+      obstacleRect.right > characterRect.left &&
+      obstacleRect.left < characterRect.right &&
+      obstacleRect.bottom > characterRect.top &&
+      obstacleRect.top < characterRect.bottom
+    ) {
+      endGame();
+    }
+  });
+}
+
+function endGame() {
+  currently_jumping = false;
+  alert("Game Over!");
+  resetGame();
+}
+
+function resetGame() {
+  document
+    .querySelectorAll(".obstacle")
+    .forEach((obstacle) => obstacle.remove());
+  characterElement.style.bottom = "0px";
+}
