@@ -14,16 +14,6 @@ body {
   border: 2px solid #333;
 }
 
-#character {
-  width: 50px;
-  height: 50px;
-  background-color: #333;
-  position: absolute;
-  bottom: 0;
-  left: 50px;
-  border-radius: 5px;
-}
-
 .obstecale {
   width: 30px;
   height: 50px;
@@ -31,8 +21,13 @@ body {
   position: absolute;
   bottom: 0;
   right: 0;
+  margin: 0;
+  overflow: hidden;
+  background-color: #a01010;
+  font-family: Arial, sans-serif;
   animation: moveObstacle 2s infinite linear;
 }
+
 @keyframes moveObstacle {
     from {
       right: -50px;
