@@ -8,10 +8,11 @@ characterElement.setAttribute("id", "character");
 displayElement.appendChild(characterElement);
 
 let currently_jumping = false;
+let tracker_id = 0;
 
 const calculateJump = () => {
   const LITTLE_G = 10;
-  const INITIAL_VELOCITY = 70;
+  const INITIAL_VELOCITY = 65;
   const flight_time = (2 * INITIAL_VELOCITY) / LITTLE_G;
 
   // let new_velocity = INITIAL_VELOCITY - LITTLE_G*timing_counter;
@@ -19,8 +20,8 @@ const calculateJump = () => {
 
   heights_array.forEach(
     (value, index, array) =>
-      (array[index] = `${
-        INITIAL_VELOCITY * index - (LITTLE_G * index * index) / 2
+      ( array[index] = `${
+        Math.floor(INITIAL_VELOCITY * index - (LITTLE_G * index * index) / 2)
       }px`)
   );
   return heights_array;
@@ -38,10 +39,11 @@ function jumpAnimationTracker(jumpArray) {
 
     characterElement.style.bottom = jumpArray[step_counter];
     step_counter++;
-  }, 100);
+  }, 33);
 
   // Return a function to clear the interval
-  return () => clearInterval(execute);
+  const clear_jump = () => clearInterval(execute);
+  
 }
 
 const handleKeyup = (e) => {
@@ -50,7 +52,7 @@ const handleKeyup = (e) => {
   if (e.code === "Space") {
     if (currently_jumping === false) {
       currently_jumping = true;
-      jumpAnimationTracker(calculateJump());
+      tracker_id = jumpAnimationTracker(calculateJump());
     }
   }
 };
