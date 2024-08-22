@@ -61,6 +61,12 @@ let obstacleInterval;
 let collisionInterval;
 let lastObstacleTime = 0;
 let minGap = 1500;
+let reduceGapCounter = 0; // To track the number of times the gap has been reduced
+
+// Initial values
+const maxReductions = 3; // Number of times the gap can be reduced
+const reductionAmount = 300; // Amount to reduce the gap each time
+
 
 function generateObstacle() {
   obstacleInterval = setInterval(function () {
@@ -71,14 +77,15 @@ function generateObstacle() {
       obstacleElement.classList.add("obstacle");
       displayElement.appendChild(obstacleElement);
 
-      minGap = 1200 + Math.random() * 1000;
+      minGap = Math.max(800,minGap);
+      // minGap = minGap + Math.random()*500;
 
       obstacleElement.style.animation = "moveObstacle 3s linear forwards";
 
       obstacleElement.addEventListener("animationend", function () {
         obstacleElement.remove();
-        score++;
         scoreElement.textContent = `Score: ${score}`;
+        updateScore();
       });
 
       lastObstacleTime = currentTime;
@@ -87,6 +94,17 @@ function generateObstacle() {
 
   collisionInterval = setInterval(checkCollision, 100);
 }
+function updateScore() {
+    score++;
+    console.log("Score:", score);
+  
+    // Check if the score is a multiple of 10 and the gap reduction hasn't happened more than 3 times
+    if (score % 10 === 0 && reduceGapCounter < maxReductions) {
+      minGap = Math.max(800, minGap - reductionAmount); // Reduce the gap, but don't let it go below 800ms
+      reduceGapCounter++;
+      console.log("Gap reduced to:", minGap);
+    }
+  }
 
 function startObstacle() {
   setInterval(generateObstacle, 3000);
