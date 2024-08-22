@@ -16,9 +16,9 @@ body {
 #character {
   position: absolute;
   bottom: 0px;
-  left: 10px;
-  height: 128px;
-  width: 128px;
+  left: 64px;
+  height: 64px;
+  width: 64px;
   background-image: url(../assets/images/character/cute_dino.jpg);
   background-size: contain;
 }

@@ -37,10 +37,14 @@ function jumpAnimationTracker(jumpArray) {
 
     characterElement.style.bottom = jumpArray[step_counter];
     step_counter++;
-  }, 33);
+  }, 40);
+
+  // Return a function to clear the interval
+  const clear_jump = () => clearInterval(execute);
+ 
 }
 
-const handleKeyup = (e) => {
+const handleKey = (e) => {
   e.preventDefault();
 
   if (e.code === "Space") {
@@ -51,7 +55,7 @@ const handleKeyup = (e) => {
   }
 };
 
-document.addEventListener("keyup", handleKeyup);
+document.addEventListener("keydown", handleKey);
 
 let obstacleInterval;
 let collisionInterval;
