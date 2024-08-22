@@ -59,16 +59,46 @@ const handleKeyup = (e) => {
 
 document.addEventListener("keyup", handleKeyup);
 
-function generateObstecle() {
-  setInterval(function () {
-    let obstecleElement = document.createElement("div");
-    obstecleElement.classList.add("obstacle");
-    displayElement.appendChild(obstecleElement);
-  }, 3000);
-  setInterval(checkCollision, 100);
-}
+let obstacleInterval;
+let collisionInterval;
+let lastObstacleTime = 0;
+//used to have more control in spaces between obstacles
+let minGap = 1500
 
-generateObstecle();
+function generateObstecle() {
+    obstacleInterval = setInterval(function () {
+        let currentTime = Date.now();
+    
+        // Ensure a minimum gap between obstacles
+        if (currentTime - lastObstacleTime >= minGap) {
+          let obstacleElement = document.createElement("div");
+          obstacleElement.classList.add("obstacle");
+          displayElement.appendChild(obstacleElement);
+    
+          // Randomize the gap for more dynamic gameplay
+          minGap = 1200 + Math.random() * 1000;
+    
+          // Move the obstacle across the screen with CSS
+          obstacleElement.style.animation = "moveObstacle 3s linear forwards";
+    
+          // Remove obstacle when animation ends
+          obstacleElement.addEventListener("animationend", function () {
+            obstacleElement.remove();
+          });
+    
+          // Update the time the last obstacle was generated
+          lastObstacleTime = currentTime;
+        }
+      }, 500); // 
+   
+   
+    collisionInterval = setInterval(checkCollision, 100);
+
+}
+function strartObstacle (){
+    setInterval(generateObstecle , 3000)
+}
+strartObstacle()
 
 // equation of motion ----
 // height = v*t - g*t*t/2  g=9.8 v=10 t=(20*timing_counter)/1000
@@ -92,6 +122,10 @@ function checkCollision() {
 function endGame() {
   currently_jumping = false;
   alert("Game Over!");
+
+  clearInterval(obstacleInterval);
+  clearInterval(collisionInterval);
+
   resetGame();
 }
 
