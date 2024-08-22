@@ -17,9 +17,10 @@ body {
   position: absolute;
   bottom: 0px;
   left: 10px;
-  height: 50px;
-  width: 50px;
-  background-color: blue;
+  height: 128px;
+  width: 128px;
+  background-image: url(../assets/images/character/cute_dino.jpg);
+  background-size: contain;
 }
 .obstacle {
   width: 30px;
