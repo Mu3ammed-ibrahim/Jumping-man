@@ -5,6 +5,46 @@ body {
   font-family: Arial, sans-serif;
 }
 
+header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header h1{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin: 0;
+  height: 8.5rem;
+  width: 70rem;
+}
+
+
+header h1 p{
+  position: absolute;
+  bottom: 0;
+  width: 5rem;
+  height: 5rem;
+  padding: 0.5rem;
+  margin: 0;
+  text-align: center;
+  font-size: 4rem;
+  color: rgb(129, 138, 5);
+  opacity: 0;
+  transition: all 0.4s ease-out;
+}
+
+.intro_animation{
+  color:rgb(3, 238, 93);
+  bottom: 3rem;
+  transition-timing-function: ease-in;
+}
+
+.fade-in{
+  opacity: 1;
+}
+
 #game-container {
   width: 100vw;
   height: 400px;
