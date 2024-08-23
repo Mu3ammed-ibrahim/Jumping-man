@@ -1,6 +1,5 @@
 const game = () => {
   //Global scope =
-
   //Initialise global scope variables
   let currently_jumping = false;
   let game_in_progress = false;
@@ -14,7 +13,6 @@ const game = () => {
   const animate_letter_element = document.querySelectorAll("header h1 p");
   const narrator_element = document.querySelector(".narrator-content-target");
   const welcome_container_element = document.querySelector("#welcome-container");
- 
   // set the id for the dynamically generated element so it utilises the predefined styles in base.css
   character_element.setAttribute("id", "character");
 
@@ -23,7 +21,6 @@ const game = () => {
     const LITTLE_G = 10;
     const INITIAL_VELOCITY = 65;
     const flight_time = (2 * INITIAL_VELOCITY) / LITTLE_G;
-
     const heights_array = Array(flight_time + 1).fill(0);
 
     heights_array.forEach(
@@ -49,7 +46,6 @@ const game = () => {
       step_counter++;
     }, 40);
   }
-
   function checkCollision() {
     const character_rect = character_element.getBoundingClientRect();
     const obstacles = document.querySelectorAll(".obstacle");
@@ -85,11 +81,8 @@ const game = () => {
           let obstacle_element = document.createElement("div");
           obstacle_element.classList.add("obstacle");
           display_element.appendChild(obstacle_element);
-
           min_gap = 1200 + Math.random() * 1000;
-
           obstacle_element.style.animation = "moveObstacle 3s linear forwards";
-
           obstacle_element.addEventListener("animationend", function () {
             obstacle_element.remove();
             score++;
@@ -161,9 +154,7 @@ const game = () => {
     obstacle_manager.start();
     score_element.textContent = `Score: ${obstacle_manager.getScore()}`;
   }
-
   //Animations Section
-
   animate_letter_element.forEach((child, index) => {
     child.style.left = `${4.6 * index}rem`;
     setTimeout(() => {
@@ -192,12 +183,10 @@ const game = () => {
       obstacle_manager.start();
     }, 1500)
   }
-
   //End Animations section
 
   //Event Handlers and Listeners Section
   const handleKeydown = (e) => {
-
     if (e.code === "Space") {
       if (game_over === true) {
         return;
@@ -222,8 +211,7 @@ const game = () => {
         obstacle_manager.resume();
       }
     }
-    // }
-
+  
     if (game_over === true) {
       if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
         game_over = false;
@@ -233,10 +221,8 @@ const game = () => {
   }
 
   //End of Define Functions section
-
   //Assign Listeners
   document.addEventListener("keydown", handleKeydown);
-
   //End of Event Handlers and Listeners Section
 
   //Create an instance of createObstacleManager
