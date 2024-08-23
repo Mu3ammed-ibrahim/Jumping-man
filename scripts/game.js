@@ -1,14 +1,37 @@
 const game = () => {
+  //Global scope constatnts
+  const narrator_speach_elements =
+    ["HI!",
+      "Can you help us?",
+      "Click the screen if you can see what I am telling you!",
+      "This is Jilly",
+      "JILLY NEEDS HELP!!",
+      "Press the Spacebar to make Jilly jump",
+      "Great!!",
+      "Jump Jilly over the oncoming obstacles to score points !!",
+      "Hit Enter to start or pause the game"
+    ];
 
-  const displayElement = document.querySelector(".game-container");
-
+  //Initialise global scope variables
   let currently_jumping = false;
-  let tracker_id = 0;
-  let score = 0;
-  let scoreElement = document.querySelector("#score");
   let game_in_progress = false;
   let game_over = false;
+  let proceed_to_next = false;
+  let narrator_segment_counter = 0;
 
+  //Gather nodes and nodelists for dynamic manipulation of screen elements
+  const display_element = document.querySelector(".game-container");
+  const character_element = document.createElement("div");
+  const score_element = document.querySelector("#score");
+  const animate_letter_element = document.querySelectorAll("header h1 p");
+  const narrator_element = document.querySelector(".narrator-content-target");
+  const welcome_container_element = document.querySelector("#welcome-container");
+  const welcome_element = document.querySelector(".welcome-dialog-box");
+
+  // set the id for the dynamically generated element so it utilises the predefined styles in base.css
+  character_element.setAttribute("id", "character");
+
+  //Define Functions section
   const calculateJump = () => {
     const LITTLE_G = 10;
     const INITIAL_VELOCITY = 65;
@@ -35,22 +58,21 @@ const game = () => {
         return;
       }
 
-      characterElement.style.bottom = jumpArray[step_counter];
+      character_element.style.bottom = jumpArray[step_counter];
       step_counter++;
     }, 40);
-
   }
 
   function checkCollision() {
-    const characterRect = characterElement.getBoundingClientRect();
+    const character_rect = character_element.getBoundingClientRect();
     const obstacles = document.querySelectorAll(".obstacle");
     obstacles.forEach((obstacle) => {
       const obstacleRect = obstacle.getBoundingClientRect();
       if (
-        obstacleRect.right > characterRect.left &&
-        obstacleRect.left < characterRect.right &&
-        obstacleRect.bottom > characterRect.top &&
-        obstacleRect.top < characterRect.bottom
+        obstacleRect.right > character_rect.left &&
+        obstacleRect.left < character_rect.right &&
+        obstacleRect.bottom > character_rect.top &&
+        obstacleRect.top < character_rect.bottom
       ) {
         endGame();
       }
@@ -58,66 +80,66 @@ const game = () => {
   }
 
   function createObstacleManager() {
-    let obstacleInterval;
-    let collisionInterval;
-    let isRunning = false;
-    let lastObstacleTime = Date.now();
-    let minGap = 1200; // Initial gap
+    let obstacle_interval;
+    let collision_interval;
+    let is_running = false;
+    let last_obstacle_time = Date.now();
+    let min_gap = 1200; // Initial gap
     let score = 0;
 
     function start() {
-      if (isRunning) return; // Prevent multiple intervals if already running
-      isRunning = true;
+      if (is_running) return; // Prevent multiple intervals if already running
+      is_running = true;
       game_in_progress = true;
-      obstacleInterval = setInterval(function () {
+      obstacle_interval = setInterval(function () {
         let currentTime = Date.now();
 
-        if (currentTime - lastObstacleTime >= minGap) {
-          let obstacleElement = document.createElement("div");
-          obstacleElement.classList.add("obstacle");
-          displayElement.appendChild(obstacleElement);
+        if (currentTime - last_obstacle_time >= min_gap) {
+          let obstacle_element = document.createElement("div");
+          obstacle_element.classList.add("obstacle");
+          display_element.appendChild(obstacle_element);
 
-          minGap = 1200 + Math.random() * 1000;
+          min_gap = 1200 + Math.random() * 1000;
 
-          obstacleElement.style.animation = "moveObstacle 3s linear forwards";
+          obstacle_element.style.animation = "moveObstacle 3s linear forwards";
 
-          obstacleElement.addEventListener("animationend", function () {
-            obstacleElement.remove();
+          obstacle_element.addEventListener("animationend", function () {
+            obstacle_element.remove();
             score++;
-            scoreElement.textContent = `Score: ${score}`;
+            score_element.textContent = `Score: ${score}`;
           });
 
-          lastObstacleTime = currentTime;
+          last_obstacle_time = currentTime;
         }
       }, 500);
 
-      collisionInterval = setInterval(checkCollision, 100);
+      collision_interval = setInterval(checkCollision, 100);
     }
 
     function stop() {
-      // if (!isRunning) return;
+      // if (!is_running) return;
       let current_obstacles = document.querySelectorAll(".obstacle");
       current_obstacles.forEach(child => child.style.animationPlayState = 'paused');
-      clearInterval(obstacleInterval);
-      clearInterval(collisionInterval);
-      isRunning = false;
+      clearInterval(obstacle_interval);
+      clearInterval(collision_interval);
+      is_running = false;
       game_in_progress = false;
     }
 
     function resume() {
-      if (isRunning) return; // Prevent multiple intervals if already running
+      if (is_running) return; // Prevent multiple intervals if already running
       start();
     }
 
     function reset() {
       stop();
-      lastObstacleTime = Date.now();
-      minGap = 1200; // Reset gap to initial value
+      last_obstacle_time = Date.now();
+      min_gap = 1200; // Reset gap to initial value
       score = 0;
-      scoreElement.textContent = `Score: ${score}`;
+      score_element.textContent = `Score: ${score}`;
       document
-      .querySelectorAll(".obstacle")
-      .forEach((obstacle) => obstacle.remove());
+        .querySelectorAll(".obstacle")
+        .forEach((obstacle) => obstacle.remove());
     }
 
 
@@ -132,40 +154,28 @@ const game = () => {
     };
   }
 
-  obstacle_manager = createObstacleManager();
-
   function endGame() {
     currently_jumping = false;
     game_over = true;
-    let finalScoreElement = document.querySelector(".final-score");
-    let finalScoreContainerElement = document.querySelector(".final-score-container");
-    finalScoreElement.textContent = `Your final score is: ${obstacle_manager.getScore()}`
-    finalScoreContainerElement.classList.toggle('fade-in');
+    let final_score_element = document.querySelector(".final-score");
+    let final_score_container_element = document.querySelector(".final-score-container");
+    final_score_element.textContent = `Your final score is: ${obstacle_manager.getScore()}`
+    final_score_container_element.classList.toggle('fade-in');
     obstacle_manager.stop();
-
-    //resetGame();
   }
 
   function resetGame() {
-    let finalScoreContainerElement = document.querySelector(".final-score-container");
-    finalScoreContainerElement.classList.toggle('fade-in');
-    characterElement.style.bottom = "0px";
+    let final_score_container_element = document.querySelector(".final-score-container");
+    final_score_container_element.classList.toggle('fade-in');
+    character_element.style.bottom = "0px";
     obstacle_manager.reset();
     obstacle_manager.start();
-    scoreElement.textContent = `Score: ${obstacle_manager.getScore()}`;
+    score_element.textContent = `Score: ${obstacle_manager.getScore()}`;
   }
 
-  let characterElement = document.createElement("div");
-  characterElement.setAttribute("id", "character");
+  //Animations Section
 
-  let proceed_to_next = false;
-  let narrator_segment_counter = 0;
-
-  const animateLetterElement = document.querySelectorAll("header h1 p");
-  const narratorElement = document.querySelector(".narrator-content-target");
-  const welcomeContainer = document.querySelector("#welcome-container");
-  const welcomeElement = document.querySelector(".welcome-dialog-box");
-  animateLetterElement.forEach((child, index) => {
+  animate_letter_element.forEach((child, index) => {
     child.style.left = `${4.6 * index}rem`;
     setTimeout(() => {
       child.classList.toggle('intro_animation');
@@ -178,47 +188,35 @@ const game = () => {
   });
 
 
-  const narrator_speach_elements =
-    ["HI!",
-      "Can you help us?",
-      "Click the screen if you can see what I am telling you!",
-      "This is Jilly",
-      "JILLY NEEDS HELP!!",
-      "Press the Spacebar to make Jilly jump",
-      "Great!!",
-      "Jump Jilly over the oncoming obstacles to score points !!",
-      "Hit Enter to start or pause the game"
-    ];
-
-  const sequence_one = () => {
+  const sequenceOne = () => {
 
     narrator_segment_counter++;
-    welcomeElement.focus();
+    welcome_element.focus();
 
     setTimeout(() => {
-      welcomeElement.classList.add('open');
+      welcome_element.classList.add('open');
 
       setTimeout(() => {
-        narratorElement.textContent = narrator_speach_elements[0];
-        narratorElement.classList.toggle("animate-narrator-text");
+        narrator_element.textContent = narrator_speach_elements[0];
+        narrator_element.classList.toggle("animate-narrator-text");
       }, 1000);
 
       setTimeout(() => {
-        narratorElement.classList.toggle("animate-narrator-text");
+        narrator_element.classList.toggle("animate-narrator-text");
       }, 2500)
 
       setTimeout(() => {
-        narratorElement.textContent = narrator_speach_elements[1];
-        narratorElement.classList.toggle("animate-narrator-text");
+        narrator_element.textContent = narrator_speach_elements[1];
+        narrator_element.classList.toggle("animate-narrator-text");
       }, 3500)
 
       setTimeout(() => {
-        narratorElement.classList.toggle("animate-narrator-text");
+        narrator_element.classList.toggle("animate-narrator-text");
       }, 5000)
 
       setTimeout(() => {
-        narratorElement.textContent = narrator_speach_elements[2];
-        narratorElement.classList.toggle("animate-narrator-text");
+        narrator_element.textContent = narrator_speach_elements[2];
+        narrator_element.classList.toggle("animate-narrator-text");
         proceed_to_next = true;
       }, 6500)
 
@@ -226,92 +224,95 @@ const game = () => {
     }, 2000)
   }
 
-  const sequence_two = () => {
+  const sequenceTwo = () => {
 
     narrator_segment_counter++
-    narratorElement.classList.toggle("animate-narrator-text");
-    narratorElement.textContent = "";
+    narrator_element.classList.toggle("animate-narrator-text");
+    narrator_element.textContent = "";
 
     setTimeout(() => {
-      narratorElement.classList.toggle("animate-narrator-text");
-      narratorElement.textContent = narrator_speach_elements[3];
+      narrator_element.classList.toggle("animate-narrator-text");
+      narrator_element.textContent = narrator_speach_elements[3];
     }, 1000);
 
     setTimeout(() => {
-      narratorElement.classList.toggle("animate-narrator-text");
+      narrator_element.classList.toggle("animate-narrator-text");
     }, 2500)
 
 
     setTimeout(() => {
-      narratorElement.textContent = narrator_speach_elements[4];
-      narratorElement.classList.toggle("animate-narrator-text");
-      welcomeElement.appendChild(characterElement);
+      narrator_element.textContent = narrator_speach_elements[4];
+      narrator_element.classList.toggle("animate-narrator-text");
+      welcome_element.appendChild(character_element);
     }, 3500);
 
     setTimeout(() => {
-      narratorElement.classList.toggle("animate-narrator-text");
+      narrator_element.classList.toggle("animate-narrator-text");
     }, 5000)
 
     setTimeout(() => {
-      narratorElement.textContent = narrator_speach_elements[5];
-      narratorElement.classList.toggle("animate-narrator-text");
+      narrator_element.textContent = narrator_speach_elements[5];
+      narrator_element.classList.toggle("animate-narrator-text");
       proceed_to_next = true;
-      welcomeElement.appendChild(characterElement);
+      welcome_element.appendChild(character_element);
     }, 6000);
 
   };
 
-  const sequence_three = () => {
+  const sequenceThree = () => {
 
     narrator_segment_counter++
-    narratorElement.classList.toggle("animate-narrator-text");
-    narratorElement.textContent = "";
+    narrator_element.classList.toggle("animate-narrator-text");
+    narrator_element.textContent = "";
 
     setTimeout(() => {
-      narratorElement.classList.toggle("animate-narrator-text");
-      narratorElement.textContent = narrator_speach_elements[6];
+      narrator_element.classList.toggle("animate-narrator-text");
+      narrator_element.textContent = narrator_speach_elements[6];
     }, 1000);
 
     setTimeout(() => {
-      narratorElement.classList.toggle("animate-narrator-text");
+      narrator_element.classList.toggle("animate-narrator-text");
     }, 2500)
 
 
     setTimeout(() => {
-      narratorElement.textContent = narrator_speach_elements[7];
-      narratorElement.classList.toggle("animate-narrator-text");
-      welcomeElement.appendChild(characterElement);
+      narrator_element.textContent = narrator_speach_elements[7];
+      narrator_element.classList.toggle("animate-narrator-text");
+      welcome_element.appendChild(character_element);
     }, 3500);
 
     setTimeout(() => {
-      narratorElement.classList.toggle("animate-narrator-text");
+      narrator_element.classList.toggle("animate-narrator-text");
     }, 5000)
 
     setTimeout(() => {
-      narratorElement.textContent = narrator_speach_elements[8];
-      narratorElement.classList.toggle("animate-narrator-text");
+      narrator_element.textContent = narrator_speach_elements[8];
+      narrator_element.classList.toggle("animate-narrator-text");
       proceed_to_next = true;
     }, 6000);
 
   };
 
-  const sequence_four = () => {
+  const sequenceFour = () => {
     narrator_segment_counter++;
     game_in_progress = true;
-    narratorElement.classList.toggle("animate-narrator-text");
-    characterElement.remove();
+    narrator_element.classList.toggle("animate-narrator-text");
+    character_element.remove();
     setTimeout(() => {
-      welcomeElement.classList.toggle("open");
-      welcomeContainer.classList.toggle("open");
+      welcome_element.classList.toggle("open");
+      welcome_container_element.classList.toggle("open");
     }, 400)
 
     setTimeout(() => {
-      displayElement.appendChild(characterElement);
+      display_element.appendChild(character_element);
       // generateObstacle();
       obstacle_manager.start();
     }, 1500)
   }
 
+  //End Animations section
+
+  //Event Handlers and Listeners Section
   const handleKeydown = (e) => {
 
     if (e.code === "Space") {
@@ -325,7 +326,7 @@ const game = () => {
       if (narrator_segment_counter === 2) {
         if (e.code === "Space") {
           proceed_to_next = false;
-          sequence_three();
+          sequenceThree();
         }
       };
 
@@ -333,13 +334,13 @@ const game = () => {
       if (narrator_segment_counter === 3) {
         if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
           proceed_to_next = false;
-          sequence_four();
+          sequenceFour();
         }
       }
     }
 
     if (proceed_to_next === false) {
-      if (narrator_segment_counter <=3) return;
+      if (narrator_segment_counter <= 3) return;
       if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
         let current_obstacles = document.querySelectorAll(".obstacle");
         if (game_in_progress === true) {
@@ -353,9 +354,9 @@ const game = () => {
       }
     }
 
-    if (game_over === true){
-      if ((e.code === "Enter") || (e.code === "NumpadEnter")){
-        game_over=false;
+    if (game_over === true) {
+      if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
+        game_over = false;
         resetGame();
       }
     }
@@ -366,14 +367,23 @@ const game = () => {
     if (narrator_segment_counter === 1)
       if (proceed_to_next === true) {
         proceed_to_next = false;
-        sequence_two();
+        sequenceTwo();
       }
   };
 
+  //End of Define Functions section
+
+  //Assign Listeners
   document.addEventListener("keydown", handleKeydown);
   document.addEventListener("click", handleClick);
 
-  sequence_one();
+  //End of Event Handlers and Listeners Section
+
+  //Create an instance of createObstacleManager
+  obstacle_manager = createObstacleManager();
+
+  //Call the first sequence to start the intro and begin the game loop
+  sequenceOne();
 }
 
 game();
