@@ -1,22 +1,10 @@
 const game = () => {
-  //Global scope constatnts
-  const narrator_speach_elements =
-    ["HI!",
-      "Can you help us?",
-      "Click the screen if you can see what I am telling you!",
-      "This is Jilly",
-      "JILLY NEEDS HELP!!",
-      "Press the Spacebar to make Jilly jump",
-      "Great!!",
-      "Jump Jilly over the oncoming obstacles to score points !!",
-      "Hit Enter to start or pause the game"
-    ];
+  //Global scope =
 
   //Initialise global scope variables
   let currently_jumping = false;
   let game_in_progress = false;
   let game_over = false;
-  let proceed_to_next = false;
   let narrator_segment_counter = 0;
 
   //Gather nodes and nodelists for dynamic manipulation of screen elements
@@ -26,8 +14,7 @@ const game = () => {
   const animate_letter_element = document.querySelectorAll("header h1 p");
   const narrator_element = document.querySelector(".narrator-content-target");
   const welcome_container_element = document.querySelector("#welcome-container");
-  const welcome_element = document.querySelector(".welcome-dialog-box");
-
+ 
   // set the id for the dynamically generated element so it utilises the predefined styles in base.css
   character_element.setAttribute("id", "character");
 
@@ -142,7 +129,6 @@ const game = () => {
         .forEach((obstacle) => obstacle.remove());
     }
 
-
     return {
       start: start,
       stop: stop,
@@ -190,119 +176,13 @@ const game = () => {
     }, (100 * index) + 400)
   });
 
-
-  const sequenceOne = () => {
-
-    narrator_segment_counter++;
-    welcome_element.focus();
-
-    setTimeout(() => {
-      welcome_element.classList.add('open');
-
-      setTimeout(() => {
-        narrator_element.textContent = narrator_speach_elements[0];
-        narrator_element.classList.toggle("animate-narrator-text");
-      }, 1000);
-
-      setTimeout(() => {
-        narrator_element.classList.toggle("animate-narrator-text");
-      }, 2500)
-
-      setTimeout(() => {
-        narrator_element.textContent = narrator_speach_elements[1];
-        narrator_element.classList.toggle("animate-narrator-text");
-      }, 3500)
-
-      setTimeout(() => {
-        narrator_element.classList.toggle("animate-narrator-text");
-      }, 5000)
-
-      setTimeout(() => {
-        narrator_element.textContent = narrator_speach_elements[2];
-        narrator_element.classList.toggle("animate-narrator-text");
-        proceed_to_next = true;
-      }, 6500)
-
-
-    }, 2000)
-  }
-
-  const sequenceTwo = () => {
-
-    narrator_segment_counter++
-    narrator_element.classList.toggle("animate-narrator-text");
-    narrator_element.textContent = "";
-
-    setTimeout(() => {
-      narrator_element.classList.toggle("animate-narrator-text");
-      narrator_element.textContent = narrator_speach_elements[3];
-    }, 1000);
-
-    setTimeout(() => {
-      narrator_element.classList.toggle("animate-narrator-text");
-    }, 2500)
-
-
-    setTimeout(() => {
-      narrator_element.textContent = narrator_speach_elements[4];
-      narrator_element.classList.toggle("animate-narrator-text");
-      welcome_element.appendChild(character_element);
-    }, 3500);
-
-    setTimeout(() => {
-      narrator_element.classList.toggle("animate-narrator-text");
-    }, 5000)
-
-    setTimeout(() => {
-      narrator_element.textContent = narrator_speach_elements[5];
-      narrator_element.classList.toggle("animate-narrator-text");
-      proceed_to_next = true;
-      welcome_element.appendChild(character_element);
-    }, 6000);
-
-  };
-
-  const sequenceThree = () => {
-
-    narrator_segment_counter++
-    narrator_element.classList.toggle("animate-narrator-text");
-    narrator_element.textContent = "";
-
-    setTimeout(() => {
-      narrator_element.classList.toggle("animate-narrator-text");
-      narrator_element.textContent = narrator_speach_elements[6];
-    }, 1000);
-
-    setTimeout(() => {
-      narrator_element.classList.toggle("animate-narrator-text");
-    }, 2500)
-
-
-    setTimeout(() => {
-      narrator_element.textContent = narrator_speach_elements[7];
-      narrator_element.classList.toggle("animate-narrator-text");
-      welcome_element.appendChild(character_element);
-    }, 3500);
-
-    setTimeout(() => {
-      narrator_element.classList.toggle("animate-narrator-text");
-    }, 5000)
-
-    setTimeout(() => {
-      narrator_element.textContent = narrator_speach_elements[8];
-      narrator_element.classList.toggle("animate-narrator-text");
-      proceed_to_next = true;
-    }, 6000);
-
-  };
-
-  const sequenceFour = () => {
+  const introSequence = () => {
     narrator_segment_counter++;
     game_in_progress = true;
     narrator_element.classList.toggle("animate-narrator-text");
     character_element.remove();
     setTimeout(() => {
-      welcome_element.classList.toggle("open");
+      // welcome_element.classList.toggle("open");
       welcome_container_element.classList.toggle("open");
     }, 400)
 
@@ -321,7 +201,7 @@ const game = () => {
     if (e.code === "Space") {
       if (game_over === true) {
         return;
-      } else if ((obstacle_manager.isRunning() === false) && (narrator_segment_counter > 3)){
+      } else if (obstacle_manager.isRunning() === false) {
         return;
       } else {
         if (currently_jumping === false) {
@@ -331,37 +211,18 @@ const game = () => {
       }
     }
 
-    if (proceed_to_next === true) {
-      if (narrator_segment_counter === 2) {
-        if (e.code === "Space") {
-          proceed_to_next = false;
-          sequenceThree();
-        }
-      };
-
-
-      if (narrator_segment_counter === 3) {
-        if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
-          proceed_to_next = false;
-          sequenceFour();
-        }
+    if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
+      let current_obstacles = document.querySelectorAll(".obstacle");
+      if (game_in_progress === true) {
+        game_in_progress = false;
+        obstacle_manager.stop();
+      } else if (game_in_progress === false) {
+        game_in_progress = true;
+        current_obstacles.forEach(child => child.style.animationPlayState = 'running')
+        obstacle_manager.resume();
       }
     }
-
-    if (proceed_to_next === false) {
-      if (narrator_segment_counter <= 3) return;
-      if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
-        let current_obstacles = document.querySelectorAll(".obstacle");
-        if (game_in_progress === true) {
-          game_in_progress = false;
-          obstacle_manager.stop();
-        } else if (game_in_progress === false) {
-          game_in_progress = true;
-          current_obstacles.forEach(child => child.style.animationPlayState = 'running')
-          obstacle_manager.resume();
-        }
-      }
-    }
+    // }
 
     if (game_over === true) {
       if ((e.code === "Enter") || (e.code === "NumpadEnter")) {
@@ -371,28 +232,18 @@ const game = () => {
     }
   }
 
-  const handleClick = (e) => {
-
-    if (narrator_segment_counter === 1)
-      if (proceed_to_next === true) {
-        proceed_to_next = false;
-        sequenceTwo();
-      }
-  };
-
   //End of Define Functions section
 
   //Assign Listeners
   document.addEventListener("keydown", handleKeydown);
-  document.addEventListener("click", handleClick);
 
   //End of Event Handlers and Listeners Section
 
   //Create an instance of createObstacleManager
   obstacle_manager = createObstacleManager();
 
-  //Call the first sequence to start the intro and begin the game loop
-  sequenceOne();
+  //Call the intro sequence to begin the game loop
+  introSequence();
 }
 
 game();
