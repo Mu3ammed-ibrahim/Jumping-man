@@ -150,6 +150,9 @@ const game = () => {
       reset: reset,
       getScore: function () {
         return score;
+      },
+      isRunning: function () {
+        return is_running;
       }
     };
   }
@@ -317,6 +320,8 @@ const game = () => {
 
     if (e.code === "Space") {
       if (game_over === true) {
+        return;
+      } else if ((obstacle_manager.isRunning() === false) && (narrator_segment_counter > 3)){
         return;
       } else {
         if (currently_jumping === false) {
