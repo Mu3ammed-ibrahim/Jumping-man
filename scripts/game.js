@@ -186,7 +186,7 @@ const game = () => {
       "JILLY NEEDS HELP!!",
       "Press the Spacebar to make Jilly jump",
       "Great!!",
-      "Jump Jilly over the oncoming obstacles to save her!!",
+      "Jump Jilly over the oncoming obstacles to score points !!",
       "Hit Enter to start or pause the game"
     ];
 
