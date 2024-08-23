@@ -316,9 +316,13 @@ const game = () => {
   const handleKeydown = (e) => {
 
     if (e.code === "Space") {
-      if (currently_jumping === false) {
-        currently_jumping = true;
-        tracker_id = jumpAnimationTracker(calculateJump());
+      if (game_over === true) {
+        return;
+      } else {
+        if (currently_jumping === false) {
+          currently_jumping = true;
+          tracker_id = jumpAnimationTracker(calculateJump());
+        }
       }
     }
 
