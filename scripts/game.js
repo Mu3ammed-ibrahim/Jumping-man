@@ -150,6 +150,9 @@ const game = () => {
       reset: reset,
       getScore: function () {
         return score;
+      },
+      isRunning: function () {
+        return is_running;
       }
     };
   }
@@ -316,9 +319,15 @@ const game = () => {
   const handleKeydown = (e) => {
 
     if (e.code === "Space") {
-      if (currently_jumping === false) {
-        currently_jumping = true;
-        tracker_id = jumpAnimationTracker(calculateJump());
+      if (game_over === true) {
+        return;
+      } else if ((obstacle_manager.isRunning() === false) && (narrator_segment_counter > 3)){
+        return;
+      } else {
+        if (currently_jumping === false) {
+          currently_jumping = true;
+          tracker_id = jumpAnimationTracker(calculateJump());
+        }
       }
     }
 
