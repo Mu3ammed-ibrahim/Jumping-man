@@ -8,12 +8,28 @@
     <script src="./scripts/game.js" defer></script>
 </head>
 <body>
-    <header></header>
+    <header>
+        <h1>
+            <p>..</p><p>J</p><p>U</p><p>M</p><p>P</p><p>I</p><p>N</p><p>G</p><p>.</p><p>J</p><p>I</p><p>L</p><p>L</p><p>Y</p><p>..</p>
+        </h1>
+    </header>
     <main>
-        <div id="game-container">
+        <section id="welcome-container" class="open">
+            <div class="welcome-dialog-box">
+                <p class="narrator-content-target"></p>
+            </div>
+        </section>
+        <section class="game-container">
             <div id="score">Score: </div>
-        </div>
+            <div class="final-score-container">
+                <p class="game-over-text">GAME OVER</p>
+                <p class="final-score game-over-text"> <!-- This is filled in dynamically by the script --> </p>
+                <p class="game-over-text">Hit Enter to start a new game or press F5 to return to the intro</p>
+            </div>
+        </section>
     </main>
-    <footer></footer>
+    <footer>
+
+    </footer>
 </body>
 </html>
