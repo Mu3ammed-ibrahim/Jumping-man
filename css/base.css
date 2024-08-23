@@ -134,7 +134,6 @@ header h1 p{
   background-image: url(../assets/images/character/cute_dino.jpg);
   background-size: contain;
 }
-
 .obstacle {
   width: 40px;
   height: 70px;
@@ -148,7 +147,6 @@ header h1 p{
   background-position: center;
   background-size:cover ;
 }
-
 @keyframes moveObstacle {
   from {
     right: -50px;
